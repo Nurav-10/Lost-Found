@@ -5,7 +5,6 @@ import { db } from "@/dbconfig/db";
 export async function GET(request: Request) {
   //get list of item that has been lost.
 
-
   await db();
 
   //item that are approved by admin/moderator
@@ -33,11 +32,20 @@ export async function GET(request: Request) {
   }
 }
 
+
+//user can claim the product the product that are approved is shown only here.
+
 export async function PATCH(request:Request){
-  const {status,id}=await request.json()
+  const {status,id,claimUserId}=await request.json()
+
+  if(status!=='approved') return NextResponse.json({
+    success:false,
+    message:'Product is yet not approved'
+  })
+
   await db()
   try {
-    const item=await Item.updateOne({_id:id},{status})
+    const item=await Item.updateOne({_id:id},{status,claimedBy:claimUserId})
     if(item) return NextResponse.json({success:true,status:200,message:'Successfully changed the status'})
 
       return NextResponse.json({success:false,status:403,message:'Problem while changing the state'})

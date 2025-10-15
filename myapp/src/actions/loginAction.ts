@@ -33,6 +33,7 @@ export async function Login(formData: FormData) {
       email: userExist.email,
       mobileNo: userExist.mobileNo,
       profilePicture: userExist.profilePicture,
+      role:userExist.role
     };
 
     const token = await jwt.sign(data, process.env.JWT_SECRET!);
@@ -44,9 +45,9 @@ export async function Login(formData: FormData) {
       maxAge: 60 * 60,
       path: "/",
     });
-
     return { status: 200, success: true, message: "Successfully login",data};
   } catch {
     return { success: false, message: "Problem while logging in" };
   }
 }
+

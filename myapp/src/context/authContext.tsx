@@ -24,19 +24,30 @@ export const AuthProvider=({children}:{children:React.ReactNode})=>{
    const [user,setUser]=useState<User|null>(null)
    const [loading,setLoading]=useState(false)
 
-     useEffect(() => {
-      setLoading(true)
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+  useEffect(() => {
+  const loadUser = () => {
+    setLoading(true);
+    try {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    } catch (err) {
+      console.error("Failed to parse user from localStorage:", err);
+      localStorage.removeItem("user");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false)
-  }, []);
+  };
+
+  loadUser();
+}, []);
 
 
    const logout=async()=>{
       //remove cookie call action.
       await LogoutAction()
+      localStorage.setItem('user','')
       setUser(null)
    }
 

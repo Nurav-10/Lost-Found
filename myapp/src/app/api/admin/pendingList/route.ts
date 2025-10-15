@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import Item from "@/models/ItemSchema";
 import { db } from "@/dbconfig/db";
 import User from "@/models/userModel";
@@ -8,7 +8,8 @@ export async function GET(request: Request) {
 
   await db();
   try {
-    //logic to check if admin. automaticaaly checked using middleware (UPDATION!)
+  
+
     const items = await Item.find({
       status: "approval pending",
     });
@@ -42,21 +43,20 @@ export async function GET(request: Request) {
 }
 
 export async function PATCH(request: Request) {
-  const {id} = await request.json();
+  const { id } = await request.json();
   await db();
   try {
-    //if admin change the status. automatically checked in middleware.
-    const item = await Item.updateOne({ _id: id }, { status:"approved"});
+    const item = await Item.updateOne({ _id: id }, { status: "approved" });
     if (!item)
       return NextResponse.json(
-        { success: false, message: "Problem while changing the status"},
+        { success: false, message: "Problem while changing the status" },
         { status: 403 }
       );
 
     return NextResponse.json(
       {
         success: true,
-        message: "Successfully changed the status of the item"
+        message: "Successfully changed the status of the item",
       },
       { status: 200 }
     );
@@ -68,5 +68,27 @@ export async function PATCH(request: Request) {
       },
       { status: 500 }
     );
+  }
+}
+
+
+export async function DELETE(request:NextRequest){
+  try{
+    const {id}=await request.json()
+    const itemDelete=await Item.findByIdAndDelete({_id:id})
+    if(itemDelete)
+      return NextResponse.json({
+    message:'Successfully deleted the item',
+  success:true},{status:200})
+  else
+     return NextResponse.json({
+    message:'Failed deleted the item',
+  success:false},{status:404})
+  }
+  catch{
+    return NextResponse.json({
+      success:false,
+      message:'Error while deleting the item'
+    },{status:500})
   }
 }

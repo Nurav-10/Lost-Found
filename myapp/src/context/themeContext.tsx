@@ -1,18 +1,27 @@
-import { Dispatch, SetStateAction } from 'react'
-import { createContext,useContext,useState } from 'react'
-import React from 'react'
-interface AuthContextInterface{
-   user:String|null,
-   setUser:Dispatch<SetStateAction<string|null>>;
-   loading:boolean,
-   login:()=>Promise<void>
-   logout:()=>Promise<void>
-   signup:()=>Promise<void>
+'use client'
+import React, { useState } from "react";
+import { createContext,useContext } from "react";
+
+interface themeContext{
+   theme:string,
+   setThemes:()=>void
+}
+const ThemeContext=createContext<themeContext|undefined>(undefined)
+
+export const ThemeProvider=({children}:{children:React.ReactNode})=>{
+   const [theme,setTheme]=useState('light')
+
+   const setThemes=()=>{
+      setTheme(prev=>prev==='light'?'dark':'light')
+   }
+   return <ThemeContext.Provider value={{theme,setThemes}}>
+      {children}
+   </ThemeContext.Provider>
 }
 
-const AuthContext=createContext<AuthContextInterface|undefined>(undefined)
+export const useTheme=()=>{
+   const context=useContext(ThemeContext)
+   if(!context) throw new Error('Theme context must be used within theme provider')
 
-export const AuthProvider=({children}:{children:React.ReactNode})=>{
-   const [user,setUser]=useState<string|null>(null)
-   
+   return context;   
 }

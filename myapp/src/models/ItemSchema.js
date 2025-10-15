@@ -1,6 +1,14 @@
-import mongoose from "mongoose";
+import mongoose, { Mongoose } from "mongoose";
 
 const itemSchema=new mongoose.Schema({
+   user:{
+      type:mongoose.Schema.Types.ObjectId,
+      ref:'User'
+   },
+   claimedBy:{
+      type:mongoose.Schema.Types.ObjectId,
+      ref:'User'
+   },
    title:{
       type:String,
       required:true

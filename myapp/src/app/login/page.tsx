@@ -12,8 +12,9 @@ const page = () => {
   const handleSubmit=async(formData:FormData)=>{
     const res=await Login(formData)
     if(res.success) {
-      toast.success('Login Successfully')
       setUser(res.data!)
+      localStorage.setItem('user',JSON.stringify(res.data))
+      toast.success('Login Successfully')
       router.push('/')
       return
     }

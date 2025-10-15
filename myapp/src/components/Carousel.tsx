@@ -9,6 +9,7 @@ import user6 from '../../public/user6.jpg'
 import user7 from '../../public/user7.jpg'
 import Image from 'next/image'
 import {motion} from 'motion/react'
+import { useTheme } from '@/context/themeContext'
 
 const Carousel = () => {
   const carouselData=[
@@ -55,13 +56,13 @@ const Carousel = () => {
       image:user7
     }
   ]
-  
+  const {theme}=useTheme()
   return (
     <motion.div
     initial={{opacity:0,y:50}}
     animate={{opacity:100,y:0}}
     transition={{duration:1,delay:1.5,ease:"easeIn"}}
-    className="px-2 flex flex-col gap-1 font-['poppins'] overflow-x-hidden">
+    className={`px-2 flex flex-col gap-1 font-['poppins'] overflow-x-hidden ${theme==='light'?'text-black':'text-white'}`}>
       <h2 className='text-xl'></h2>
       <motion.div    
     //   animate={{ x:["100%","-100%"]}}
